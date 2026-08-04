@@ -1,0 +1,61 @@
+# BankAccount Class
+
+class BankAccount:
+    def __init__(self, accountNumber, holderName, balance):
+        self.accountNumber = accountNumber
+        self.holderName = holderName
+        self.__balance = balance  # Private attribute
+
+    def deposit(self, amount):
+        if amount > 0:
+            self.__balance += amount
+            print(f"{self.holderName}: Deposited AED {amount:.2f}")
+        else:
+            print(f"{self.holderName}: Deposit amount must be positive.")
+
+    def withdraw(self, amount):
+        if amount <= 0:
+            print(f"{self.holderName}: Withdrawal amount must be positive.")
+        elif amount > self.__balance:
+            print(f"{self.holderName}: Withdrawal of AED {amount:.2f} failed! Insufficient balance.")
+        else:
+            self.__balance -= amount
+            print(f"{self.holderName}: Withdrawn AED {amount:.2f}")
+
+    def getBalance(self):
+        return self.__balance
+
+    def printStatement(self):
+        print("\n========== BANK ACCOUNT STATEMENT ==========")
+        print(f"Account Number : {self.accountNumber}")
+        print(f"Holder Name    : {self.holderName}")
+        print(f"Current Balance: AED {self.__balance:.2f}")
+        print("============================================")
+
+
+# Task 2 – Instantiation & Interaction
+
+# Creating three BankAccount objects
+account1 = BankAccount("ACC001", "Sachin Patel", 5000)
+account2 = BankAccount("ACC002", "Rahul Sharma", 3000)
+account3 = BankAccount("ACC003", "Priya Singh", 7000)
+
+# Transactions for Account 1
+account1.deposit(1500)
+account1.withdraw(2000)
+account1.withdraw(6000)   # Exceeds balance
+
+# Transactions for Account 2
+account2.deposit(1000)
+account2.withdraw(500)
+account2.withdraw(4000)   # Exceeds balance
+
+# Transactions for Account 3
+account3.deposit(2500)
+account3.withdraw(3000)
+account3.withdraw(8000)   # Exceeds balance
+
+# Print final statements
+account1.printStatement()
+account2.printStatement()
+account3.printStatement()

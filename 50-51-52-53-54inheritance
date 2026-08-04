@@ -1,0 +1,105 @@
+# Parent Class
+class BankAccount:
+    def __init__(self, accountNumber, holderName, balance):
+        self.accountNumber = accountNumber
+        self.holderName = holderName
+        self.__balance = balance  # Private attribute
+
+    def deposit(self, amount):
+        if amount > 0:
+            self.__balance += amount
+            print(f"£{amount} deposited into {self.holderName}'s account.")
+        else:
+            print("Deposit amount must be positive.")
+
+    def withdraw(self, amount):
+        if amount <= 0:
+            print("Withdrawal amount must be positive.")
+        elif amount > self.__balance:
+            print("Insufficient balance.")
+        else:
+            self.__balance -= amount
+            print(f"£{amount} withdrawn from {self.holderName}'s account.")
+
+    def getBalance(self):
+        return self.__balance
+
+    def setBalance(self, amount):
+        self.__balance = amount
+
+    def printStatement(self):
+        print("\n-----------------------------")
+        print("Bank Account Statement")
+        print("-----------------------------")
+        print(f"Account Number : {self.accountNumber}")
+        print(f"Holder Name    : {self.holderName}")
+        print(f"Balance        : £{self.getBalance():.2f}")
+        print("-----------------------------")
+
+
+# SavingsAccount Subclass
+class SavingsAccount(BankAccount):
+    MIN_BALANCE = 100
+
+    def __init__(self, accountNumber, holderName, balance, interestRate):
+        super().__init__(accountNumber, holderName, balance)
+        self.interestRate = interestRate
+
+    def applyInterest(self):
+        interest = self.getBalance() * (self.interestRate / 100)
+        self.deposit(interest)
+        print(f"Interest of £{interest:.2f} applied at {self.interestRate}%.")
+
+    # Overridden withdraw()
+    def withdraw(self, amount):
+        if amount <= 0:
+            print("Withdrawal amount must be positive.")
+        elif self.getBalance() - amount < SavingsAccount.MIN_BALANCE:
+            print("Withdrawal denied. Savings account must maintain at least £100.")
+        else:
+            self.setBalance(self.getBalance() - amount)
+            print(f"£{amount} withdrawn from Savings Account.")
+
+
+# CurrentAccount Subclass
+class CurrentAccount(BankAccount):
+    def __init__(self, accountNumber, holderName, balance, overdraftLimit):
+        super().__init__(accountNumber, holderName, balance)
+        self.overdraftLimit = overdraftLimit
+
+    # Overridden withdraw()
+    def withdraw(self, amount):
+        if amount <= 0:
+            print("Withdrawal amount must be positive.")
+        elif self.getBalance() - amount < -self.overdraftLimit:
+            print("Overdraft limit exceeded.")
+        else:
+            self.setBalance(self.getBalance() - amount)
+            print(f"£{amount} withdrawn from Current Account.")
+
+
+# -------------------------------
+# Testing the Classes
+# -------------------------------
+
+# Savings Account
+print("===== Savings Account =====")
+savings = SavingsAccount("SA1001", "Sachin Patel", 1000, 5)
+
+savings.printStatement()
+savings.deposit(500)
+savings.withdraw(1200)     # Should fail (minimum balance)
+savings.withdraw(300)      # Should succeed
+savings.applyInterest()
+savings.printStatement()
+
+
+# Current Account
+print("\n===== Current Account =====")
+current = CurrentAccount("CA2001", "Rahul Sharma", 500, 300)
+
+current.printStatement()
+current.withdraw(700)      # Allowed (Overdraft)
+current.withdraw(200)      # Exceeds overdraft
+current.deposit(600)
+current.printStatement()

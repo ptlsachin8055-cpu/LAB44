@@ -1,0 +1,61 @@
+# BankAccount Class
+
+class BankAccount:
+    def __init__(self, accountNumber, holderName, balance):
+        self.accountNumber = accountNumber
+        self.holderName = holderName
+        self.__balance = balance   # Private attribute (Encapsulation)
+
+    # Deposit method
+    def deposit(self, amount):
+        if amount > 0:
+            self.__balance += amount
+            print(f"Deposited: ${amount:.2f}")
+        else:
+            print("Error: Deposit amount must be greater than 0.")
+
+    # Withdraw method
+    def withdraw(self, amount):
+        if amount <= 0:
+            print("Error: Withdrawal amount must be greater than 0.")
+        elif amount > self.__balance:
+            print("Error: Insufficient balance.")
+        else:
+            self.__balance -= amount
+            print(f"Withdrawn: ${amount:.2f}")
+
+    # Get balance method
+    def getBalance(self):
+        return self.__balance
+
+    # Print account statement
+    def printStatement(self):
+        print("\n----- Bank Account Statement -----")
+        print("Account Number :", self.accountNumber)
+        print("Holder Name    :", self.holderName)
+        print(f"Current Balance: ${self.__balance:.2f}")
+        print("----------------------------------")
+
+
+# Main Program
+account = BankAccount("123456789", "Sachin Patel", 1000)
+
+account.printStatement()
+
+# Deposit money
+account.deposit(500)
+
+# Invalid deposit
+account.deposit(-100)
+
+# Withdraw money
+account.withdraw(300)
+
+# Invalid withdrawal
+account.withdraw(1500)
+
+# Display balance
+print("\nAvailable Balance: $", account.getBalance())
+
+# Print final statement
+account.printStatement()
